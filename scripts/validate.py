@@ -127,6 +127,18 @@ def check_index(path):
         if (not isinstance(root, list) or len(root) > 4 or
                 not all(safe_relative(r) and "/" not in r and r.lower() != "apps" and len(r) < 48 for r in root)):
             fail(w, "copy_to_root must list at most 4 top-level names (not apps)")
+        reps = a.get("replace_at_root", [])
+        if not isinstance(reps, list) or len(reps) > 2:
+            fail(w, "replace_at_root must list at most 2 files")
+            reps = []
+        for r in reps:
+            to = r.get("to", "") if isinstance(r, dict) else ""
+            if not (isinstance(r, dict) and safe_relative(r.get("file")) and len(r["file"]) < 48 and
+                    safe_relative(to) and len(to) < 48 and to.lower() != "apps" and not to.lower().startswith("apps/")):
+                fail(w, "replace_at_root: each needs file (in the app folder) and to (at the card root, not in apps)")
+            arch = r.get("archive", f"{slug}_archive") if isinstance(r, dict) else ""
+            if not re.fullmatch(r"[A-Za-z0-9._\- ]{1,40}", arch) or arch.lower() == "apps":
+                fail(w, "replace_at_root: archive must be a folder name of 1-40 letters, digits, . _ - or space")
     return apps
 
 
@@ -162,6 +174,11 @@ def check_download(a):
         prefix = a["root"].rstrip("/") + "/" if a.get("root") else ""
         if prefix + a.get("binary", "boot.dol") not in names:
             fail(w, f"{prefix}{a.get('binary', 'boot.dol')} is not in the zip")
+        for r in a.get("replace_at_root", []):
+            if prefix + r["file"] not in names:
+                fail(w, f"replace_at_root file {prefix}{r['file']} is not in the archive")
+    elif a.get("replace_at_root") and any(r["file"] != a.get("binary") for r in a["replace_at_root"]):
+        fail(w, "a bare .dol can only put its own binary at the root")
     print(f"ok  {a['slug']}: {len(data)} bytes, sha256 {digest}")
 
 
