@@ -160,7 +160,7 @@
       "version": "0.6r2119",
       "category": "utilities",
       "short": "Loader and multitool: games, homebrew, memory cards",
-      "long": "The GameCube loader: boots games and homebrew from SD, GC Loader, FlippyDrive, network and more, with game patches, video modes, cheats and memory card tools. Installs to sd:/apps/swiss. If your console boots Swiss from sd:/ipl.dol (PicoBoot or PicoLoader with gekkoboot), the browser offers to replace that too and moves the old one to sd:/swiss_archive. Other boot methods (FlippyDrive, GC Loader, memory card, disc) keep their copy elsewhere; update those by hand from the homepage.",
+      "long": "The GameCube loader: boots games and homebrew from SD, GC Loader, FlippyDrive, network and more, with game patches, video modes, cheats and memory card tools. Installs to sd:/apps/swiss. If your console boots Swiss from sd:/ipl.dol (PicoBoot or PicoLoader with gekkoboot), the browser offers to replace that too, along with sd:/swiss/patches/apploader.img if you have one (used by Apploader in-game reset), and moves the old ones to sd:/swiss_archive. Other boot methods (FlippyDrive, GC Loader, memory card, disc) keep their copy elsewhere; update those by hand from the homepage.",
       "homepage": "https://github.com/emukidid/swiss-gc",
       "archive": "https://github.com/emukidid/swiss-gc/releases/download/v0.6r2119/swiss_r2119.tar.xz",
       "zip_size": 11199948,
@@ -171,8 +171,13 @@
       "updated": 1790362068,
       "replace_at_root": [
         {
-          "file": "swiss_r2119.dol",
+          "file": "swiss_r2119/DOL/swiss_r2119.dol",
           "to": "ipl.dol",
+          "archive": "swiss_archive"
+        },
+        {
+          "file": "swiss_r2119/Apploader/EXTRACT_TO_ROOT.zip!swiss/patches/apploader.img",
+          "to": "swiss/patches/apploader.img",
           "archive": "swiss_archive"
         }
       ]

@@ -51,7 +51,7 @@ SHA-256.
 | `binary` | no | The program inside the app's folder, default `boot.dol`. For a bare `.dol`, the file name to save it as. |
 | `folder` | no | Folder under `sd:/apps/`, default the slug. |
 | `keep` | no | Up to 4 paths in the app's folder that an update leaves alone (settings, saves). |
-| `replace_at_root` | no | Up to 2 boot files the app brings a new version of, as `{"file": "<in the app folder>", "to": "<path at the card root>", "archive": "<folder>"}`. On install or update, if the file at `to` is on the card, the program asks; on yes it replaces it and moves the old one to `sd:/<archive>/<old version>/` (default archive folder `<slug>_archive`). Files that are not on the card are never created, and nothing in `apps` can be a target. |
+| `replace_at_root` | no | Up to 2 boot files the app brings a new version of, as `{"file": "<path in the download>", "to": "<path at the card root>", "archive": "<folder>"}`. `file` may point into a zip inside the download as `outer.zip!path/in/it`; for a bare `.dol` it must be the `binary`. On install or update, if the file at `to` is on the card, the program asks; on yes it replaces it and moves the old one to `sd:/<archive>/<old version>/` (default archive folder `<slug>_archive`). Files that are not on the card are never created, and nothing in `apps` can be a target. |
 | `copy_to_root` | no | Up to 4 folders from the app that are copied to the root of the card on first install, never overwritten, and left in place on removal. |
 | `updated` | no | Release date as Unix time in seconds. |
 
