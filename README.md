@@ -1,4 +1,4 @@
-# GC Homebrew Hub catalog
+# gc-homebrew-hub-catalog
 
 The list of GameCube homebrew that
 [GC Homebrew Hub Browser](https://github.com/gc-homebrew-hub/gc-homebrew-hub-browser)
