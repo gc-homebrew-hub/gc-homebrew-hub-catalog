@@ -4,25 +4,28 @@ applies when it reads them (source/catalog.c), so an entry the program would
 silently drop fails here instead.
 
 usage: validate.py [--download] [REPO_DIR]
-  --download  also fetch every app and check zip_size, sha256 and, for zips,
-              that the root folder and binary are inside
+  --download  also fetch every app and check zip_size, sha256 and, for
+              archives, that the binary is inside the root folder
 """
 import hashlib
 import io
 import json
+import lzma
 import os
 import re
 import sys
+import tarfile
 import urllib.request
 import zipfile
 
 CATEGORIES = {"games", "emulators", "media", "utilities", "demos"}
 MAX_APPS = 256
 INDEX_MAX_BYTES = 256 * 1024
+XZ_MEMLIMIT = 16 << 20                      # XZ_MEMLIMIT in the program's tarxz.c
 MAX_SOURCES = 16
 # longest string each field may be (the program's buffer size minus one)
 LIMITS = {"slug": 31, "name": 47, "author": 39, "version": 23, "category": 15, "short": 95,
-          "long": 1023, "homepage": 159, "zip": 255, "dol": 255, "sha256": 64, "root": 63,
+          "long": 1023, "homepage": 159, "zip": 255, "archive": 255, "dol": 255, "sha256": 64, "root": 63,
           "binary": 47, "folder": 47}
 
 errors = []
@@ -96,9 +99,9 @@ def check_index(path):
         for k in ("name", "author", "version", "short"):
             if not a.get(k):
                 fail(w, f"{k} is missing")
-        if ("zip" in a) == ("dol" in a):
-            fail(w, "give exactly one of zip or dol")
-        url = a.get("zip") or a.get("dol")
+        if sum(k in a for k in ("zip", "archive", "dol")) != 1:
+            fail(w, "give exactly one of zip, archive or dol")
+        url = a.get("zip") or a.get("archive") or a.get("dol")
         if not url_ok(url):
             fail(w, "download address must be http:// or https:// with no spaces")
         folder = a.get("folder", slug)
@@ -129,7 +132,7 @@ def check_index(path):
 
 def check_download(a):
     w = f"download {a['slug']}"
-    url = a.get("zip") or a.get("dol")
+    url = a.get("zip") or a.get("archive") or a.get("dol")
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "gc-homebrew-hub-catalog validate"})
         data = urllib.request.urlopen(req, timeout=60).read()
@@ -141,11 +144,20 @@ def check_download(a):
     digest = hashlib.sha256(data).hexdigest()
     if a.get("sha256") and digest != a["sha256"]:
         fail(w, f"sha256 is {digest}")
-    if "zip" in a:
-        try:
+    if "zip" in a or "archive" in a:
+        # told apart by their first bytes, as the program does
+        if data[:4] == b"PK\3\4":
             names = set(zipfile.ZipFile(io.BytesIO(data)).namelist())
-        except zipfile.BadZipFile:
-            fail(w, "not a zip file")
+        elif data[:6] == b"\xfd7zXZ\0" and "archive" in a:
+            try:
+                lzma.LZMADecompressor(lzma.FORMAT_XZ, memlimit=XZ_MEMLIMIT).decompress(data)
+                tar = tarfile.open(fileobj=io.BytesIO(data), mode="r:xz")
+                names = {m.name.removeprefix("./") for m in tar.getmembers() if m.isfile()}
+            except lzma.LZMAError as e:
+                fail(w, f"cannot unpack within {XZ_MEMLIMIT >> 20} MB of memory: {e}")
+                return
+        else:
+            fail(w, "zip must be a zip file; archive a zip or .tar.xz")
             return
         prefix = a["root"].rstrip("/") + "/" if a.get("root") else ""
         if prefix + a.get("binary", "boot.dol") not in names:

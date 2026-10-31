@@ -44,10 +44,10 @@ SHA-256.
 | `short` | yes | One line, at most 95 characters. |
 | `long` | no | The app's page, at most 1023 characters. |
 | `homepage` | no | Project page. |
-| `zip` or `dol` | one of them | Download address: a zip, or a bare `.dol`. Use a release asset of a fixed version, never a "latest" link, so the SHA-256 stays true. |
+| `zip`, `archive` or `dol` | one of them | Download address: a zip; an `archive` (a zip or a `.tar.xz`); or a bare `.dol`. Use `archive` for a `.tar.xz`: versions of the program that cannot unpack one skip the entry instead of failing. A `.tar.xz` must unpack within 16 MB of memory (`xz -6` or lower). Use a release asset of a fixed version, never a "latest" link, so the SHA-256 stays true. |
 | `zip_size` | recommended | Download size in bytes. |
 | `sha256` | recommended | SHA-256 of the download; the install fails if it does not match. |
-| `root` | no | Folder inside the zip whose contents become the app's folder. |
+| `root` | no | Folder inside the archive whose contents become the app's folder; nothing outside it is written to the card. |
 | `binary` | no | The program inside the app's folder, default `boot.dol`. For a bare `.dol`, the file name to save it as. |
 | `folder` | no | Folder under `sd:/apps/`, default the slug. |
 | `keep` | no | Up to 4 paths in the app's folder that an update leaves alone (settings, saves). |

@@ -152,6 +152,23 @@
       "binary": "gc-mp3player.dol",
       "folder": "gc-station",
       "updated": 1792540787
+    },
+    {
+      "slug": "swiss",
+      "name": "Swiss",
+      "author": "emu_kidid and contributors",
+      "version": "0.6r2119",
+      "category": "utilities",
+      "short": "Loader and multitool: games, homebrew, memory cards",
+      "long": "The GameCube loader: boots games and homebrew from SD, GC Loader, FlippyDrive, network and more, with game patches, video modes, cheats and memory card tools. This installs Swiss to sd:/apps/swiss for starting it from another loader. It does not update the copy your console boots (such as ipl.dol for PicoBoot, or a FlippyDrive or GC Loader file); update that by hand from the homepage.",
+      "homepage": "https://github.com/emukidid/swiss-gc",
+      "archive": "https://github.com/emukidid/swiss-gc/releases/download/v0.6r2119/swiss_r2119.tar.xz",
+      "zip_size": 11199948,
+      "sha256": "97825799dfbe44cca08d1e49f95d15cc996bd15a052f48827b48162005cbe916",
+      "root": "swiss_r2119/DOL",
+      "binary": "swiss_r2119.dol",
+      "folder": "swiss",
+      "updated": 1790362068
     }
   ]
 }
