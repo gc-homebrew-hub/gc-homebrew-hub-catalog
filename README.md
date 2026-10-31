@@ -60,3 +60,9 @@ Limits: 256 apps, and `index.json` at most 256 KB.
 
 `scripts/serve.sh` serves this folder on your network and prints the address
 to add on the console (Sources, X).
+
+## Licence
+
+The catalog files and scripts are under the [MIT License](LICENSE). The apps
+it lists are not part of this repository and keep their own licences; see
+each app's homepage.
