@@ -1,0 +1,9 @@
+{
+  "format": 1,
+  "sources": [
+    {
+      "name": "GC Homebrew Hub",
+      "url": "https://raw.githubusercontent.com/gc-homebrew-hub/gc-homebrew-hub-catalog/main/index.json"
+    }
+  ]
+}

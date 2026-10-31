@@ -1,0 +1,24 @@
+{
+  "format": 1,
+  "name": "GC Homebrew Hub",
+  "apps": [
+    {
+      "slug": "cubebrowser",
+      "name": "CubeBrowser",
+      "author": "Arial-Bold",
+      "version": "2.8",
+      "category": "utilities",
+      "short": "Web browser with HTTPS, downloads and MIDI music",
+      "long": "A web browser for the GameCube. It loads websites over the Broadband Adapter, including secure (HTTPS) sites, with pictures, page styles, tables and forms. Files can be downloaded straight to the SD card, MIDI music plays in the background, and a Game Boy Advance on the link cable can act as the music player's screen and remote. Needs a network adapter. Settings, bookmarks and saved logins live in the gcbrowser folder and are kept on update.",
+      "homepage": "https://github.com/Arial-Bold/Cubebrowser",
+      "zip": "https://github.com/Arial-Bold/Cubebrowser/releases/download/v2.8/cubebrowser.zip",
+      "zip_size": 1018530,
+      "sha256": "1e3751a5e7145b007792809d84e27717ab006c6ef35edfcca10c6e9d75fa8b7b",
+      "root": "cubebrowser",
+      "binary": "default.dol",
+      "folder": "cubebrowser",
+      "keep": ["gcbrowser"],
+      "updated": 1793317503
+    }
+  ]
+}

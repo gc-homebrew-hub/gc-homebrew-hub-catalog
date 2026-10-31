@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Checks sources.json and index.json against the rules GC Homebrew Hub Browser
+applies when it reads them (source/catalog.c), so an entry the program would
+silently drop fails here instead.
+
+usage: validate.py [--download] [REPO_DIR]
+  --download  also fetch every app and check zip_size, sha256 and, for zips,
+              that the root folder and binary are inside
+"""
+import hashlib
+import io
+import json
+import os
+import re
+import sys
+import urllib.request
+import zipfile
+
+CATEGORIES = {"games", "emulators", "media", "utilities", "demos"}
+MAX_APPS = 256
+INDEX_MAX_BYTES = 256 * 1024
+MAX_SOURCES = 16
+# longest string each field may be (the program's buffer size minus one)
+LIMITS = {"slug": 31, "name": 47, "author": 39, "version": 23, "category": 15, "short": 95,
+          "long": 1023, "homepage": 159, "zip": 255, "dol": 255, "sha256": 64, "root": 63,
+          "binary": 47, "folder": 47}
+
+errors = []
+
+
+def fail(where, msg):
+    errors.append(f"{where}: {msg}")
+
+
+def url_ok(u):
+    return (isinstance(u, str) and 10 <= len(u) < 256 and u.startswith(("http://", "https://"))
+            and all(32 < ord(c) < 127 for c in u))
+
+
+def safe_relative(p):
+    if not isinstance(p, str) or not p or p[0] in "/\\" or ":" in p or "\\" in p:
+        return False
+    if any(ord(c) < 32 for c in p):
+        return False
+    return all(seg not in ("", ".", "..") for seg in p.split("/"))
+
+
+def check_sources(path):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    if data.get("format") != 1:
+        fail("sources.json", "format must be 1")
+    srcs = data.get("sources")
+    if not isinstance(srcs, list) or not srcs:
+        fail("sources.json", "needs a non-empty sources list")
+        return
+    if len(srcs) > MAX_SOURCES:
+        fail("sources.json", f"more than {MAX_SOURCES} sources")
+    for i, s in enumerate(srcs):
+        if not url_ok(s.get("url")):
+            fail(f"sources.json [{i}]", "url must be an http:// or https:// address under 256 characters")
+        if len(s.get("name", "")) > 47:
+            fail(f"sources.json [{i}]", "name longer than 47 characters")
+
+
+def check_index(path):
+    raw = open(path, "rb").read()
+    if len(raw) > INDEX_MAX_BYTES:
+        fail("index.json", f"{len(raw)} bytes; the program reads at most {INDEX_MAX_BYTES}")
+    data = json.loads(raw)
+    if data.get("format") != 1:
+        fail("index.json", "format must be 1")
+    apps = data.get("apps")
+    if not isinstance(apps, list):
+        fail("index.json", "needs an apps list")
+        return []
+    if len(apps) > MAX_APPS:
+        fail("index.json", f"more than {MAX_APPS} apps")
+    seen = set()
+    for i, a in enumerate(apps):
+        w = f"index.json app {a.get('slug') or i}"
+        if not isinstance(a, dict):
+            fail(w, "not an object")
+            continue
+        for k, n in LIMITS.items():
+            if k in a and (not isinstance(a[k], str) or len(a[k]) > n):
+                fail(w, f"{k} must be a string of at most {n} characters")
+        slug = a.get("slug", "")
+        if not re.fullmatch(r"[a-z0-9-]{1,31}", slug):
+            fail(w, "slug must be 1-31 of a-z, 0-9 and -")
+        if slug in seen:
+            fail(w, "slug used twice")
+        seen.add(slug)
+        if a.get("category") not in CATEGORIES:
+            fail(w, f"category must be one of {', '.join(sorted(CATEGORIES))}")
+        for k in ("name", "author", "version", "short"):
+            if not a.get(k):
+                fail(w, f"{k} is missing")
+        if ("zip" in a) == ("dol" in a):
+            fail(w, "give exactly one of zip or dol")
+        url = a.get("zip") or a.get("dol")
+        if not url_ok(url):
+            fail(w, "download address must be http:// or https:// with no spaces")
+        folder = a.get("folder", slug)
+        if not re.fullmatch(r"[A-Za-z0-9._\- ]{1,40}", folder) or folder.lower() == "gc-homebrew-hub-browser":
+            fail(w, "folder must be 1-40 letters, digits, . _ - or space, and not the browser's own")
+        binary = a.get("binary", "boot.dol")
+        if not safe_relative(binary):
+            fail(w, "binary must be a relative path inside the app folder")
+        if "dol" in a and ("/" in binary or not binary.lower().endswith(".dol")):
+            fail(w, "for a bare .dol, binary must be a file name ending in .dol")
+        if "root" in a and not safe_relative(a["root"]):
+            fail(w, "root must be a relative path inside the zip")
+        if "sha256" in a and not re.fullmatch(r"[0-9a-f]{64}", a["sha256"]):
+            fail(w, "sha256 must be 64 lowercase hex digits")
+        if not isinstance(a.get("zip_size", 0), int):
+            fail(w, "zip_size must be a whole number of bytes")
+        if not isinstance(a.get("updated", 0), int):
+            fail(w, "updated must be a Unix time in seconds")
+        keep = a.get("keep", [])
+        if not isinstance(keep, list) or len(keep) > 4 or not all(safe_relative(k) and len(k) < 64 for k in keep):
+            fail(w, "keep must list at most 4 relative paths")
+        root = a.get("copy_to_root", [])
+        if (not isinstance(root, list) or len(root) > 4 or
+                not all(safe_relative(r) and "/" not in r and r.lower() != "apps" and len(r) < 48 for r in root)):
+            fail(w, "copy_to_root must list at most 4 top-level names (not apps)")
+    return apps
+
+
+def check_download(a):
+    w = f"download {a['slug']}"
+    url = a.get("zip") or a.get("dol")
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "gc-homebrew-hub-catalog validate"})
+        data = urllib.request.urlopen(req, timeout=60).read()
+    except Exception as e:
+        fail(w, f"could not fetch {url}: {e}")
+        return
+    if a.get("zip_size") and len(data) != a["zip_size"]:
+        fail(w, f"size is {len(data)}, zip_size says {a['zip_size']}")
+    digest = hashlib.sha256(data).hexdigest()
+    if a.get("sha256") and digest != a["sha256"]:
+        fail(w, f"sha256 is {digest}")
+    if "zip" in a:
+        try:
+            names = set(zipfile.ZipFile(io.BytesIO(data)).namelist())
+        except zipfile.BadZipFile:
+            fail(w, "not a zip file")
+            return
+        prefix = a["root"].rstrip("/") + "/" if a.get("root") else ""
+        if prefix + a.get("binary", "boot.dol") not in names:
+            fail(w, f"{prefix}{a.get('binary', 'boot.dol')} is not in the zip")
+    print(f"ok  {a['slug']}: {len(data)} bytes, sha256 {digest}")
+
+
+def main():
+    args = sys.argv[1:]
+    download = "--download" in args
+    args = [a for a in args if a != "--download"]
+    repo = args[0] if args else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    check_sources(os.path.join(repo, "sources.json"))
+    apps = check_index(os.path.join(repo, "index.json"))
+    if download and not errors:
+        for a in apps:
+            check_download(a)
+    for e in errors:
+        print("error", e)
+    if errors:
+        sys.exit(1)
+    print(f"{len(apps)} apps, all valid")
+
+
+if __name__ == "__main__":
+    main()
