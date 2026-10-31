@@ -17,8 +17,79 @@
       "root": "cubebrowser",
       "binary": "default.dol",
       "folder": "cubebrowser",
-      "keep": ["gcbrowser"],
+      "keep": [
+        "gcbrowser"
+      ],
       "updated": 1793317503
+    },
+    {
+      "slug": "snes9xgx",
+      "name": "Snes9x GX",
+      "author": "dborth and contributors",
+      "version": "5.0.4",
+      "category": "emulators",
+      "short": "Super Nintendo / Super Famicom emulator",
+      "long": "A Super Nintendo / Super Famicom emulator built on Snes9x, with a full menu for loading games, saving state and mapping controls. Put your ROMs (.smc, .sfc, or zipped) in sd:/snes9xgx/roms; save and settings folders are created on first use.",
+      "homepage": "https://github.com/dborth/snes9xgx",
+      "zip": "https://github.com/dborth/snes9xgx/releases/download/5.0.4/Snes9xGX-5.0.4-GameCube.zip",
+      "zip_size": 2092300,
+      "sha256": "9c72969c115d68c85837ba12115f4efd8a665fbcdee4643508fa6f9d7fef3352",
+      "binary": "snes9xgx-gc.dol",
+      "folder": "snes9xgx",
+      "updated": 1792534039
+    },
+    {
+      "slug": "fceugx",
+      "name": "FCE Ultra GX",
+      "author": "dborth and contributors",
+      "version": "4.0.3",
+      "category": "emulators",
+      "short": "NES / Famicom emulator with Famicom Disk System support",
+      "long": "An NES / Famicom emulator built on FCE Ultra, with a full menu for loading games, saving state and mapping controls. Put your ROMs (.nes, .fds, .unf, .nsf, or zipped) in sd:/fceugx/roms; disksys.rom for Famicom Disk System games goes in sd:/fceugx.",
+      "homepage": "https://github.com/dborth/fceugx",
+      "zip": "https://github.com/dborth/fceugx/releases/download/4.0.3/FCEUltraGX-4.0.3-GameCube.zip",
+      "zip_size": 1852123,
+      "sha256": "0b062a7924623fb0805a64a47a1e0e663694e22b232813a48f33b8c5184bf5b2",
+      "binary": "fceugx-gc.dol",
+      "folder": "fceugx",
+      "updated": 1792533955
+    },
+    {
+      "slug": "gcmm",
+      "name": "GCMM",
+      "author": "suloku",
+      "version": "1.5.2",
+      "category": "utilities",
+      "short": "Memory card manager: back up and restore saves",
+      "long": "GameCube Memory Manager copies saves between the memory cards and the SD card: back up a whole card or single saves, restore them, delete saves, and fix or format a card. Backups go to the SD card.",
+      "homepage": "https://github.com/suloku/gcmm",
+      "zip": "https://github.com/suloku/gcmm/releases/download/1.5.2/gcmm_1.5.2.zip",
+      "zip_size": 4637030,
+      "sha256": "840dbfea6d4fbd5f266dcda92e69088d78fb95987685a2d65285d07b66986f5f",
+      "root": "gcmm_1.5.2/gamecube",
+      "binary": "gcmm_GC.dol",
+      "folder": "gcmm",
+      "updated": 1637410525
+    },
+    {
+      "slug": "gcradio",
+      "name": "gcradio",
+      "author": "RyoSaeba89",
+      "version": "3.2.0",
+      "category": "media",
+      "short": "Internet radio: Icecast/SHOUTcast MP3, AAC and Opus",
+      "long": "Plays Icecast and SHOUTcast internet radio streams (MP3, AAC, Opus) over the Broadband Adapter, with a spectrum analyser. Starts on a default station; type another stream address on the console and it is remembered. This is the GX interface build. HTTPS stations need gcradio-ca.pem in sd:/apps/gcradio (see the homepage); plain HTTP streams work without it.",
+      "homepage": "https://github.com/RyoSaeba89/gcradio",
+      "dol": "https://github.com/RyoSaeba89/gcradio/releases/download/v3.2.0/gcradio-gui.dol",
+      "zip_size": 2277036,
+      "sha256": "c871e9bdd12c7f17b4006d6064635d82d8ada2a279652c0738168c92ce12f3b8",
+      "binary": "gcradio-gui.dol",
+      "folder": "gcradio",
+      "updated": 1787688902,
+      "keep": [
+        "gcradio.conf",
+        "gcradio-ca.pem"
+      ]
     }
   ]
 }
