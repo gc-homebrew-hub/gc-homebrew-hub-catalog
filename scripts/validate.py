@@ -105,8 +105,12 @@ def check_index(path):
         if not url_ok(url):
             fail(w, "download address must be http:// or https:// with no spaces")
         folder = a.get("folder", slug)
-        if not re.fullmatch(r"[A-Za-z0-9._\- ]{1,40}", folder) or folder.lower() == "gc-homebrew-hub-browser":
-            fail(w, "folder must be 1-40 letters, digits, . _ - or space, and not the browser's own")
+        # the browser's own folder is for its own entry only, which brings nothing else
+        own = slug == "gc-homebrew-hub-browser"
+        if not re.fullmatch(r"[A-Za-z0-9._\- ]{1,40}", folder) or (folder.lower() == "gc-homebrew-hub-browser") != own:
+            fail(w, "folder must be 1-40 letters, digits, . _ - or space; gc-homebrew-hub-browser is the browser's own entry and folder")
+        if own and any(k in a for k in ("keep", "copy_to_root", "replace_at_root")):
+            fail(w, "the browser's own entry cannot have keep, copy_to_root or replace_at_root")
         binary = a.get("binary", "boot.dol")
         if not safe_relative(binary):
             fail(w, "binary must be a relative path inside the app folder")
