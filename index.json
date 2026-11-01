@@ -186,17 +186,17 @@
       "slug": "gc-homebrew-hub-browser",
       "name": "GC Homebrew Hub Browser",
       "author": "GC Homebrew Hub",
-      "version": "0.2",
+      "version": "0.3",
       "category": "utilities",
       "short": "This app store: browse, install, update and remove homebrew",
       "long": "The program you are using. It lists the homebrew in its catalogs and installs, updates, starts and removes apps on the SD card, over the Broadband Adapter. An update puts the new files over the old ones in its folder; settings, sources and the log are kept. Start it again afterwards to run the new version.",
       "homepage": "https://github.com/gc-homebrew-hub/gc-homebrew-hub-browser",
-      "zip": "https://github.com/gc-homebrew-hub/gc-homebrew-hub-browser/releases/download/v0.2/gc-homebrew-hub-browser-v0.2.zip",
-      "zip_size": 1270600,
-      "sha256": "686c00bd5f344694f4ea34ef0c0e87fc687b00c3e596e2af6957bb417b0c7d6a",
+      "zip": "https://github.com/gc-homebrew-hub/gc-homebrew-hub-browser/releases/download/v0.3/gc-homebrew-hub-browser-v0.3.zip",
+      "zip_size": 1270984,
+      "sha256": "3371519c2d76c79880811c0b041e6a647d451b52e05ceee81894ef164fb16739",
       "root": "apps/gc-homebrew-hub-browser",
       "folder": "gc-homebrew-hub-browser",
-      "updated": 1793557948
+      "updated": 1793563530
     }
   ]
 }
