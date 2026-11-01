@@ -62,6 +62,17 @@ Limits: 256 apps, and `index.json` at most 256 KB.
 `scripts/serve.sh` serves this folder on your network and prints the address
 to add on the console (Sources, X).
 
+It also serves a test source at `test/index.json`, built by
+`scripts/make-test-source.py` and not committed, for the fields no app here
+uses yet. Its one app, "copy_to_root test" (`copytest`), installs to
+`sd:/apps/copytest` with a `settings.ini` it keeps on update, and copies
+`copytest-data` to the root of the card. Its program does nothing: starting
+it gives a black screen until you press Reset. To try an update, edit
+`sd:/apps/copytest/settings.ini` and `sd:/copytest-data/readme.txt`, restart
+the server as `scripts/serve.sh 8765 2`, and update. Both edits must survive,
+and `sd:/copytest-data/sub/version.txt` must still say 1. After removing the
+app, `sd:/copytest-data` must still be there.
+
 ## Licence
 
 The catalog files and scripts are under the [MIT License](LICENSE). The apps
