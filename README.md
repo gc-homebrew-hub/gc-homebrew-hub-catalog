@@ -8,10 +8,22 @@ branch:
 - `sources.json`: the default sources every console starts with.
 - `index.json`: the apps in this source.
 
-To add or update an app, open a pull request that changes `index.json`. A
-check runs `scripts/validate.py --download` on every pull request: it applies
-the same rules as the program and downloads each app to confirm its size and
-SHA-256.
+## Adding an app
+
+There are two ways to add or update an app:
+
+- **Open an issue.** The [Add or update an app](https://github.com/gc-homebrew-hub/gc-homebrew-hub-catalog/issues/new?template=add-app.yml)
+  form asks for the details, and a maintainer writes the entry.
+- **Open a pull request** that changes `index.json`, using the entry format
+  below. Get the size and SHA-256 of your download with:
+
+  ```bash
+  curl -sL <download address> -o app.zip && wc -c app.zip && shasum -a 256 app.zip
+  ```
+
+A check runs `scripts/validate.py --download` on every pull request: it
+applies the same rules as the program and downloads each app to confirm its
+size and SHA-256.
 
 ## An app entry
 
