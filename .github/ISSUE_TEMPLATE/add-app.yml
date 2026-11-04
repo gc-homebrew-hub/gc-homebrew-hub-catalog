@@ -1,0 +1,96 @@
+name: Add or update an app
+description: Ask for an app to be added to the catalog or updated, without editing index.json.
+title: "Add app: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill this in and a maintainer turns it into a catalog entry. If you are happy editing JSON, a [pull request](https://github.com/gc-homebrew-hub/gc-homebrew-hub-catalog/blob/main/README.md#adding-an-app) is quicker. The [README](https://github.com/gc-homebrew-hub/gc-homebrew-hub-catalog/blob/main/README.md#an-app-entry) explains each field.
+  - type: input
+    id: name
+    attributes:
+      label: App name
+      description: At most 47 characters.
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      description: At most 39 characters.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: At most 23 characters. Dotted numbers such as 1.2 compare best; any other change of version counts as an update.
+      placeholder: "1.2"
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - games
+        - emulators
+        - media
+        - utilities
+        - demos
+    validations:
+      required: true
+  - type: input
+    id: short
+    attributes:
+      label: Short description
+      description: One line for the list, at most 95 characters.
+    validations:
+      required: true
+  - type: textarea
+    id: long
+    attributes:
+      label: Long description
+      description: For the app's page, at most 1023 characters. Mention anything it needs, such as a network adapter.
+  - type: input
+    id: homepage
+    attributes:
+      label: Project page
+      placeholder: https://github.com/you/your-app
+    validations:
+      required: true
+  - type: input
+    id: download
+    attributes:
+      label: Download address
+      description: A zip, a .tar.xz or a bare .dol. Use a release asset of a fixed version, never a "latest" link, so that its SHA-256 stays true.
+      placeholder: https://github.com/you/your-app/releases/download/v1.2/your-app.zip
+    validations:
+      required: true
+  - type: input
+    id: binary
+    attributes:
+      label: Program file
+      description: Its path in the download, if it is not boot.dol at the top level.
+      placeholder: your-app/boot.dol
+  - type: textarea
+    id: keep
+    attributes:
+      label: Files an update must leave alone
+      description: Up to 4 paths in the app's folder, such as settings or saves.
+      placeholder: settings.ini
+  - type: textarea
+    id: root_files
+    attributes:
+      label: Files outside the app's folder
+      description: Folders it needs at the root of the card, or boot files it replaces there. Leave empty if there are none.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you send this
+      options:
+        - label: I have started this version on a GameCube or in Dolphin.
+          required: true
+        - label: The download is a fixed release of the app, hosted where it can stay available.
+          required: true
