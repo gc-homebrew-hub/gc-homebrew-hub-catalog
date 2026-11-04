@@ -141,17 +141,17 @@
       "slug": "gc-station",
       "name": "GC Station",
       "author": "antho13otz",
-      "version": "4.825",
+      "version": "4.848",
       "category": "media",
       "short": "Media centre: music, web radio, photos, podcasts (French)",
       "long": "A media centre (formerly GC-MP3): music from sd:/mp3 (MP3, FLAC, OGG, AAC) with covers, lyrics and an equaliser, web radio, podcasts, photos and videos, a file browser, weather and news, and a phone remote over the Broadband Adapter. The interface is in French. Settings live in sd:/gc-mp3.",
       "homepage": "https://github.com/antho13otz/gc-mp3",
-      "dol": "https://github.com/antho13otz/gc-mp3/releases/download/dernier/gc-mp3player-b825.dol",
-      "zip_size": 5898240,
-      "sha256": "ef2c2d3bc4d61ad8b82b5faf8cb8be96079b1489f80de7ab6dc19c3f52faf363",
+      "dol": "https://github.com/antho13otz/gc-mp3/releases/download/dernier/gc-mp3player-b848.dol",
+      "zip_size": 6029312,
+      "sha256": "111dc6b1674b242c0518bdcb74b53e2623ab245608e137814a085740ae9d1396",
       "binary": "gc-mp3player.dol",
       "folder": "gc-station",
-      "updated": 1793556057
+      "updated": 1793720866
     },
     {
       "slug": "swiss",
