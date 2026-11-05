@@ -232,6 +232,25 @@
       "updated": 1792522412
     },
     {
+      "slug": "doom-gc",
+      "name": "DOOM GC",
+      "author": "fromdustz",
+      "version": "1.0",
+      "category": "games",
+      "short": "Port of id Software's DOOM source. Bring your own WAD file",
+      "long": "id Software's 1997 DOOM source ported to the GameCube, with saving, a settings menu for controls, brightness and screen mode (Z on the main menu), and LAN play over the Broadband Adapter, which its author has not tested yet. No game data is included: installing creates sd:/doom, and you put your own WAD file there from a computer, next to doom.cfg. Any DOOM WAD should work; the author has tested version 1.9. Settings and saves live in sd:/doom and stay when the app is removed. If you already have an sd:/doom/doom.cfg it is left as it is.",
+      "homepage": "https://github.com/fromdustz/doom_gc",
+      "zip": "https://github.com/fromdustz/doom_gc/releases/download/doom_gcV1.0/doom_gcV1.0.zip",
+      "zip_size": 436799,
+      "sha256": "7511f22d2aad1917439b77df67e61478aecf9850b2e5a68e4654701143d0e8e3",
+      "binary": "doom_gc.dol",
+      "folder": "doom-gc",
+      "copy_to_root": [
+        "doom"
+      ],
+      "updated": 1793828348
+    },
+    {
       "slug": "gc-homebrew-hub-browser",
       "name": "GC Homebrew Hub Browser",
       "author": "GC Homebrew Hub",
