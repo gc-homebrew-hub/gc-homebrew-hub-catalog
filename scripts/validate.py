@@ -23,6 +23,8 @@ MAX_APPS = 256
 INDEX_MAX_BYTES = 256 * 1024
 XZ_MEMLIMIT = 16 << 20                      # XZ_MEMLIMIT in the program's tarxz.c
 MAX_SOURCES = 16
+LONG_SHOWN = 240                            # about what fits in the six lines the app's page shows
+LONG_SHOWN_TO_ROOT = 210                    # five lines: copy_to_root adds a line of its own
 # longest string each field may be (the program's buffer size minus one)
 LIMITS = {"slug": 31, "name": 47, "author": 39, "version": 23, "category": 15, "short": 95,
           "long": 1023, "homepage": 159, "zip": 255, "archive": 255, "dol": 255, "sha256": 64, "root": 63,
@@ -88,6 +90,9 @@ def check_index(path):
         for k, n in LIMITS.items():
             if k in a and (not isinstance(a[k], str) or len(a[k]) > n):
                 fail(w, f"{k} must be a string of at most {n} characters")
+        shown = LONG_SHOWN_TO_ROOT if a.get("copy_to_root") else LONG_SHOWN
+        if len(a.get("long", "")) > shown:
+            fail(w, f"long is {len(a['long'])} characters; the app's page has room for about {shown}")
         slug = a.get("slug", "")
         if not re.fullmatch(r"[a-z0-9-]{1,31}", slug):
             fail(w, "slug must be 1-31 of a-z, 0-9 and -")

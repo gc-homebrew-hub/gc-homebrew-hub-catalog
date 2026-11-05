@@ -54,7 +54,7 @@ size and SHA-256.
 | `name`, `author`, `version` | yes | Shown in the list. Dotted numeric versions compare numerically; any other change of version counts as an update. |
 | `category` | yes | One of `games`, `emulators`, `media`, `utilities`, `demos`. |
 | `short` | yes | One line, at most 95 characters. |
-| `long` | no | The app's page, at most 1023 characters. |
+| `long` | no | The app's page, at most 240 characters (210 with `copy_to_root`, which adds a line): the page shows six lines, with no scrolling, and cuts off the rest. Put anything people must do to use the app first, such as files to copy to the card. |
 | `homepage` | no | Project page. |
 | `zip`, `archive` or `dol` | one of them | Download address: a zip; an `archive` (a zip or a `.tar.xz`); or a bare `.dol`. Use `archive` for a `.tar.xz`: versions of the program that cannot unpack one skip the entry instead of failing. A `.tar.xz` must unpack within 16 MB of memory (`xz -6` or lower). Use a release asset of a fixed version, never a "latest" link, so the SHA-256 stays true. |
 | `zip_size` | recommended | Download size in bytes. |

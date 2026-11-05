@@ -52,7 +52,7 @@ body:
     id: long
     attributes:
       label: Long description
-      description: For the app's page, at most 1023 characters. Mention anything it needs, such as a network adapter.
+      description: For the app's page, at most 240 characters, because the rest is cut off. Start with anything it needs, such as a network adapter or files to copy to the card.
   - type: input
     id: homepage
     attributes:
